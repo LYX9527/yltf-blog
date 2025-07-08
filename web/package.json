@@ -1,0 +1,37 @@
+{
+  "name": "web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:prod": "vue-tsc -b && vite build --mode production",
+    "build:dev": "vue-tsc -b && vite build --mode development",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
+    "@tailwindcss/vite": "^4.1.8",
+    "@vueup/vue-quill": "^1.2.0",
+    "@vueuse/core": "^13.5.0",
+    "axios": "^1.10.0",
+    "date-fns": "^4.1.0",
+    "highlight.js": "^11.11.1",
+    "marked": "^16.0.0",
+    "pinia": "^3.0.3",
+    "prismjs": "^1.30.0",
+    "quill": "^2.0.3",
+    "tailwindcss": "^4.1.8",
+    "vue": "^3.5.13",
+    "vue-markdown-render": "^2.2.1",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "vue-tsc": "^2.2.8"
+  }
+}
