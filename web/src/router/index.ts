@@ -114,6 +114,15 @@ router.beforeEach(async (to, _from, next) => {
 
     // 检查是否需要认证
     if (to.meta.requiresAuth) {
+        // 如果有token但用户信息为空，先验证token
+        if (authStore.token && !authStore.isLoggedIn) {
+            const isValid = await authStore.verifyToken()
+            if (!isValid) {
+                next('/auth')
+                return
+            }
+        }
+        
         // 如果没有登录，重定向到登录页
         if (!authStore.isLoggedIn) {
             next('/auth')

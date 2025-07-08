@@ -28,3 +28,4 @@ dist-ssr
 bundle-analyzer.html
 dist.zip
 .claude/
+**/uploads/*

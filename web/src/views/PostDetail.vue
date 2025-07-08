@@ -142,7 +142,7 @@ const formatContent = (content: string) => {
                   <img
                     :src="post.author.avatar"
                     :alt="post.author.name || post.author.username"
-                    class="h-12 w-12 rounded-full"
+                    class="h-12 w-12 rounded-full object-cover"
                   />
                 </div>
                 <div v-else class="flex-shrink-0">

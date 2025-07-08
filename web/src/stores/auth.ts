@@ -101,9 +101,11 @@ export const useAuthStore = defineStore('auth', () => {
     setAuthHeader(null)
   }
 
-  // 初始化时验证 token
-  if (token.value) {
-    verifyToken()
+  // 初始化方法
+  const initialize = async () => {
+    if (token.value) {
+      await verifyToken()
+    }
   }
 
   return {
@@ -115,6 +117,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     register,
     logout,
-    verifyToken
+    verifyToken,
+    initialize
   }
 })

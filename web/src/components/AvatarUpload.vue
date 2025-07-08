@@ -50,7 +50,7 @@
           </div>
 
           <p class="text-xs text-gray-400">
-            支持 JPG、PNG 格式，最大 2MB，建议尺寸 400×400
+            支持 JPG、PNG 格式，最大 5MB，建议尺寸 400×400 或更大
           </p>
         </div>
       </div>
@@ -145,9 +145,9 @@
                 <span class="text-sm text-gray-500">缩放</span>
                 <input
                   type="range"
-                  min="0.5"
+                  min="0.1"
                   max="3"
-                  step="0.1"
+                  step="0.05"
                   v-model="scaleValue"
                   @input="handleScale"
                   class="w-24 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -265,9 +265,9 @@ const handleFileSelect = (event: Event) => {
     return
   }
 
-  // 验证文件大小 (2MB)
-  if (file.size > 2 * 1024 * 1024) {
-    toast.error('图片大小不能超过 2MB')
+  // 验证文件大小 (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    toast.error('图片大小不能超过 5MB')
     return
   }
 
@@ -397,7 +397,7 @@ const endDrag = () => {
 const handleWheel = (e: WheelEvent) => {
   e.preventDefault()
   const delta = e.deltaY > 0 ? -0.1 : 0.1
-  imageScale.value = Math.max(0.5, Math.min(3, imageScale.value + delta))
+  imageScale.value = Math.max(0.1, Math.min(3, imageScale.value + delta))
   scaleValue.value = imageScale.value
   drawCanvas()
 }
@@ -418,11 +418,29 @@ const rotateRight = () => {
 }
 
 const resetCropper = () => {
-  imageScale.value = 1
+  // 计算图片的适合缩放比例
+  if (imageObj.value) {
+    const canvasWidth = 400
+    const canvasHeight = 300
+    const imgWidth = imageObj.value.width
+    const imgHeight = imageObj.value.height
+    
+    // 计算适合画布的缩放比例，确保图片能完全显示在画布中
+    const scaleX = canvasWidth / imgWidth
+    const scaleY = canvasHeight / imgHeight
+    const fitScale = Math.min(scaleX, scaleY) * 0.8 // 乘以0.8留出一些边距
+    
+    imageScale.value = fitScale
+    scaleValue.value = fitScale
+  } else {
+    imageScale.value = 1
+    scaleValue.value = 1
+  }
+  
   imageRotation.value = 0
   imageX.value = 0
   imageY.value = 0
-  scaleValue.value = 1
+  
   nextTick(() => {
     drawCanvas()
   })
@@ -443,8 +461,8 @@ const cropAndUpload = async () => {
 
     // 创建裁剪后的图片
     const cropCanvas = document.createElement('canvas')
-    cropCanvas.width = 200
-    cropCanvas.height = 200
+    cropCanvas.width = 400
+    cropCanvas.height = 400
     const cropCtx = cropCanvas.getContext('2d')
 
     if (cropCtx) {
@@ -453,7 +471,7 @@ const cropAndUpload = async () => {
       const cropX = (sourceCanvas.width - cropSize) / 2
       const cropY = (sourceCanvas.height - cropSize) / 2
 
-      cropCtx.drawImage(sourceCanvas, cropX, cropY, cropSize, cropSize, 0, 0, 200, 200)
+      cropCtx.drawImage(sourceCanvas, cropX, cropY, cropSize, cropSize, 0, 0, 400, 400)
 
       // 转换为blob
       cropCanvas.toBlob((blob) => {
