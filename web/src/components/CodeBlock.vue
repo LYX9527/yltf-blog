@@ -425,34 +425,35 @@ const copyCode = async () => {
   margin: 0 !important;
 }
 
-/* 滚动条样式 */
+/* 更细的滚动条样式 */
 .code-block-content pre::-webkit-scrollbar {
-  height: 8px;
+  height: 6px;
 }
 
 .code-block-content pre::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
+  background: #f8f9fa;
+  border-radius: 3px;
 }
 
 .code-block-content pre::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
+  background: #d1d5db;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
 }
 
 .code-block-content pre::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: #9ca3af;
 }
 
 .dark .code-block-content pre::-webkit-scrollbar-track {
-  background: #374151;
+  background: #1f2937;
 }
 
 .dark .code-block-content pre::-webkit-scrollbar-thumb {
-  background: #6b7280;
+  background: #4b5563;
 }
 
 .dark .code-block-content pre::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: #6b7280;
 }
 </style>

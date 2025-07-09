@@ -20,21 +20,44 @@ const tocContainer = ref<HTMLElement>()
 
 // 解析Markdown内容提取标题
 const parseHeadings = (content: string): HeadingItem[] => {
-  const headingRegex = /^(#{1,6})\s+(.+)$/gm
   const results: HeadingItem[] = []
-  let match
+  
+  // 移除代码块中的内容，避免误识别代码注释中的 #
+  const removeCodeBlocks = (text: string): string => {
+    // 移除行内代码 `code`
+    let cleaned = text.replace(/`[^`]*`/g, '')
+    
+    // 移除代码块 ```code```
+    cleaned = cleaned.replace(/```[\s\S]*?```/g, '')
+    
+    // 移除缩进代码块（4个空格或1个tab开头的行）
+    cleaned = cleaned.replace(/^(    |\t).*$/gm, '')
+    
+    return cleaned
+  }
+  
+  // 清理后的内容
+  const cleanedContent = removeCodeBlocks(content)
+  
+  // 按行处理，确保标题必须在行首
+  const lines = cleanedContent.split('\n')
+  
+  for (const line of lines) {
+    // 匹配行首的标题格式：# 标题
+    const headingMatch = line.match(/^(#{1,6})\s+(.+)$/)
+    
+    if (headingMatch) {
+      const level = headingMatch[1].length
+      const text = headingMatch[2].trim()
+      const id = generateId(text)
 
-  while ((match = headingRegex.exec(content)) !== null) {
-    const level = match[1].length
-    const text = match[2].trim()
-    const id = generateId(text)
-
-    results.push({
-      id,
-      text,
-      level,
-      offsetTop: 0
-    })
+      results.push({
+        id,
+        text,
+        level,
+        offsetTop: 0
+      })
+    }
   }
 
   return results
@@ -200,34 +223,30 @@ onUnmounted(() => {
   line-height: 1.4;
 }
 
-/* 自定义滚动条样式 */
-.table-of-contents::-webkit-scrollbar {
+/* 更细的滚动条样式 */
+.table-of-contents .overflow-y-auto::-webkit-scrollbar {
   width: 4px;
 }
 
-.table-of-contents::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.table-of-contents .overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-of-contents .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #d1d5db;
   border-radius: 2px;
+  transition: background-color 0.2s ease;
 }
 
-.table-of-contents::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 2px;
-}
-
-.table-of-contents::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-.dark .table-of-contents::-webkit-scrollbar-track {
-  background: #374151;
-}
-
-.dark .table-of-contents::-webkit-scrollbar-thumb {
-  background: #6b7280;
-}
-
-.dark .table-of-contents::-webkit-scrollbar-thumb:hover {
+.table-of-contents .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
+}
+
+.dark .table-of-contents .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark .table-of-contents .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }
 </style>
