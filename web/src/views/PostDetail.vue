@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { CalendarIcon, ClockIcon, EyeIcon, UserIcon, TagIcon, HeartIcon } from '@heroicons/vue/24/outline'
 import { HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
-import { marked } from 'marked'
-import 'highlight.js/styles/github.css'
 import { postsApi, likesApi, type Post, getFullImageUrl } from '../api'
 import { useAuthStore } from '../stores/auth'
 import { useToast } from '../composables/useToast'
 import Sidebar from '../components/Sidebar.vue'
 import Comments from '../components/Comments.vue'
+import MarkdownRenderer from '../components/MarkdownRenderer.vue'
+import TableOfContents from '../components/TableOfContents.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -20,27 +20,41 @@ const error = ref('')
 const isLiked = ref(false)
 const likeCount = ref(0)
 const likePending = ref(false)
+const tocPosition = ref({
+  left: '390px',
+  top: '6rem',
+})
 
 const slug = computed(() => route.params.slug as string)
 
-onMounted(async () => {
-  await fetchPost()
-})
-
-// 配置 marked
-marked.setOptions({
-  breaks: true
-})
+// 计算目录位置
+const calculateTocPosition = () => {
+  const container = document.querySelector('.max-w-7xl')
+  if (container) {
+    const containerRect = container.getBoundingClientRect()
+    const containerLeft = containerRect.left
+    const tocLeft = Math.max(16, containerLeft - 250) // 288px = 18rem, 16px = 1rem 最小距离
+    tocPosition.value = {
+      left: `${tocLeft}px`,
+      top: '6rem',
+    }
+  }
+}
 
 const fetchPost = async () => {
   try {
     loading.value = true
+    error.value = ''
+    post.value = null
+    isLiked.value = false
+    likeCount.value = 0
+    
     const response = await postsApi.getBySlug(slug.value)
     post.value = response.data
-    
+
     // 设置点赞数
     likeCount.value = post.value.likeCount || post.value._count?.likes || 0
-    
+
     // 如果用户已登录，获取点赞状态
     if (authStore.isLoggedIn && post.value) {
       try {
@@ -58,21 +72,46 @@ const fetchPost = async () => {
   }
 }
 
+// 监听路由参数变化
+watch(
+  () => route.params.slug,
+  async (newSlug) => {
+    if (newSlug) {
+      await fetchPost()
+      // 重新计算目录位置
+      setTimeout(() => {
+        calculateTocPosition()
+      }, 100)
+    }
+  },
+  { immediate: true }
+)
+
+onMounted(() => {
+  // 监听窗口大小变化
+  window.addEventListener('resize', calculateTocPosition)
+})
+
+// 清理事件监听
+onUnmounted(() => {
+  window.removeEventListener('resize', calculateTocPosition)
+})
+
 const handleLike = async () => {
   if (!authStore.isLoggedIn) {
     toast.error('请先登录才能点赞')
     return
   }
-  
+
   if (!post.value || likePending.value) return
-  
+
   try {
     likePending.value = true
     const response = await likesApi.toggle(post.value.id)
-    
+
     isLiked.value = response.data.isLiked
     likeCount.value = response.data.likeCount
-    
+
     toast.success(response.data.isLiked ? '点赞成功' : '取消点赞')
   } catch (err) {
     console.error('Failed to toggle like:', err)
@@ -90,13 +129,6 @@ const formatDate = (dateString: string) => {
   })
 }
 
-const formatContent = (content: string) => {
-  try {
-    return marked(content || '')
-  } catch (error) {
-    return '<p>内容解析错误</p>'
-  }
-}
 </script>
 
 <template>
@@ -104,7 +136,13 @@ const formatContent = (content: string) => {
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- 主要内容区域 -->
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-2 relative">
+          <!-- 目录 - 固定定位在左侧，动态计算位置 -->
+          <div v-if="post && post.content" class="hidden xl:block fixed z-10 w-64"
+               :style="{ left: tocPosition.left, top: tocPosition.top }">
+            <TableOfContents :content="post.content" />
+          </div>
+
           <div v-if="loading" class="flex justify-center items-center h-64">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
           </div>
@@ -166,8 +204,8 @@ const formatContent = (content: string) => {
                       :disabled="likePending"
                       :class="[
                         'flex items-center space-x-1 px-3 py-1 rounded-full transition-all duration-200 disabled:opacity-50',
-                        isLiked 
-                          ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-800/50' 
+                        isLiked
+                          ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-800/50'
                           : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-red-500 dark:hover:text-red-400'
                       ]"
                     >
@@ -195,10 +233,10 @@ const formatContent = (content: string) => {
             </header>
 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
-              <div
-                class="prose prose-lg max-w-none"
-                v-html="formatContent(post.content)"
-              ></div>
+              <MarkdownRenderer
+                :content="post.content"
+                class="prose prose-lg max-w-none dark:prose-invert"
+              />
             </div>
 
             <footer v-if="post.author.bio" class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
@@ -241,7 +279,7 @@ const formatContent = (content: string) => {
           </article>
         </div>
 
-        <!-- 侧边栏 -->
+        <!-- 右侧侧边栏 -->
         <div class="lg:col-span-1">
           <Sidebar />
         </div>

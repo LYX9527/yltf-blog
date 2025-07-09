@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import {ref, computed, watch} from 'vue'
-import {marked} from 'marked'
-import 'highlight.js/styles/github.css'
+import {ref, watch} from 'vue'
 import api from '../api'
 import {useToast} from '../composables/useToast'
+import MarkdownRenderer from './MarkdownRenderer.vue'
 
 const {toast} = useToast()
 
@@ -34,18 +33,6 @@ watch(() => props.modelValue, (newValue) => {
 
 watch(content, (newValue) => {
   emit('update:modelValue', newValue)
-})
-
-marked.setOptions({
-  breaks: true
-})
-
-const renderedContent = computed(() => {
-  try {
-    return marked(content.value || '')
-  } catch (error) {
-    return '<p>Markdown 解析错误</p>'
-  }
 })
 
 const togglePreview = () => {
@@ -314,10 +301,12 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
 
       <!-- 预览 -->
       <div v-show="showPreview" class="flex-1 overflow-auto bg-white dark:bg-gray-800">
-        <div
-            class="p-4 prose prose-sm max-w-none dark:prose-invert"
-            v-html="renderedContent"
-        ></div>
+        <div class="p-4">
+          <MarkdownRenderer 
+            :content="content"
+            class="prose prose-sm max-w-none dark:prose-invert"
+          />
+        </div>
       </div>
     </div>
   </div>
