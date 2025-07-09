@@ -79,19 +79,19 @@ const copyEmail = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">联系我</h1>
-        <p class="text-xl text-gray-600">有任何问题或想法，欢迎与我交流</p>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">联系我</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-300">有任何问题或想法，欢迎与我交流</p>
       </div>
 
       <div class="grid lg:grid-cols-2 gap-12">
         <!-- 联系信息 -->
-        <div class="bg-white rounded-lg shadow-sm p-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <ChatBubbleLeftRightIcon class="h-7 w-7 mr-3 text-blue-500" />
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+            <ChatBubbleLeftRightIcon class="h-7 w-7 mr-3 text-blue-500 dark:text-blue-400" />
             联系方式
           </h2>
           
@@ -99,29 +99,29 @@ const copyEmail = async () => {
             <!-- 邮箱 -->
             <div class="flex items-start">
               <div class="flex-shrink-0">
-                <div class="p-3 bg-blue-100 rounded-lg">
-                  <EnvelopeIcon class="h-6 w-6 text-blue-600" />
+                <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <EnvelopeIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
               <div class="ml-4 flex-1">
-                <h3 class="text-lg font-medium text-gray-900">邮箱</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">邮箱</h3>
                 <div class="flex items-center mt-1">
-                  <p class="text-gray-600">{{ contactInfo.email }}</p>
+                  <p class="text-gray-600 dark:text-gray-300">{{ contactInfo.email }}</p>
                   <button
                     @click="copyEmail"
-                    class="ml-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    class="ml-3 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
                   >
                     复制
                   </button>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">{{ contactInfo.responseTime }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ contactInfo.responseTime }}</p>
               </div>
             </div>
 
             <!-- 沟通方式说明 -->
-            <div class="bg-blue-50 rounded-lg p-4">
-              <h4 class="font-medium text-blue-900 mb-2">我很乐意与您讨论：</h4>
-              <ul class="text-sm text-blue-800 space-y-1">
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+              <h4 class="font-medium text-blue-900 dark:text-blue-100 mb-2">我很乐意与您讨论：</h4>
+              <ul class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                 <li>• 技术问题和解决方案</li>
                 <li>• 项目合作机会</li>
                 <li>• 博客内容建议</li>
@@ -133,68 +133,68 @@ const copyEmail = async () => {
         </div>
 
         <!-- 联系表单 -->
-        <div class="bg-white rounded-lg shadow-sm p-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <PaperAirplaneIcon class="h-7 w-7 mr-3 text-green-500" />
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+            <PaperAirplaneIcon class="h-7 w-7 mr-3 text-green-500 dark:text-green-400" />
             发送留言
           </h2>
           
           <form @submit.prevent="submitForm" class="space-y-6">
             <!-- 姓名 -->
             <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-                姓名 <span class="text-red-500">*</span>
+              <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                姓名 <span class="text-red-500 dark:text-red-400">*</span>
               </label>
               <input
                 id="name"
                 v-model="contactForm.name"
                 type="text"
                 required
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="请输入您的姓名"
               />
             </div>
 
             <!-- 邮箱 -->
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                邮箱 <span class="text-red-500">*</span>
+              <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                邮箱 <span class="text-red-500 dark:text-red-400">*</span>
               </label>
               <input
                 id="email"
                 v-model="contactForm.email"
                 type="email"
                 required
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="请输入您的邮箱地址"
               />
             </div>
 
             <!-- 主题 -->
             <div>
-              <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">
+              <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 主题
               </label>
               <input
                 id="subject"
                 v-model="contactForm.subject"
                 type="text"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="请输入留言主题（可选）"
               />
             </div>
 
             <!-- 留言内容 -->
             <div>
-              <label for="message" class="block text-sm font-medium text-gray-700 mb-1">
-                留言内容 <span class="text-red-500">*</span>
+              <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                留言内容 <span class="text-red-500 dark:text-red-400">*</span>
               </label>
               <textarea
                 id="message"
                 v-model="contactForm.message"
                 rows="6"
                 required
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="请输入您的留言内容..."
               ></textarea>
             </div>
@@ -204,7 +204,7 @@ const copyEmail = async () => {
               <button
                 type="submit"
                 :disabled="isSubmitting"
-                class="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                class="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <PaperAirplaneIcon class="h-5 w-5 mr-2" />
                 {{ isSubmitting ? '处理中...' : '发送留言' }}
@@ -213,11 +213,11 @@ const copyEmail = async () => {
           </form>
 
           <!-- 提示信息 -->
-          <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-            <p class="text-sm text-gray-600">
+          <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <p class="text-sm text-gray-600 dark:text-gray-300">
               点击"发送留言"将会打开您的邮件客户端，您可以直接发送邮件给我。
               如果无法正常打开，请直接发送邮件到 
-              <span class="font-medium text-blue-600">{{ contactInfo.email }}</span>
+              <span class="font-medium text-blue-600 dark:text-blue-400">{{ contactInfo.email }}</span>
             </p>
           </div>
         </div>
@@ -225,9 +225,9 @@ const copyEmail = async () => {
 
       <!-- 底部说明 -->
       <div class="mt-12 text-center">
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-2">感谢您的关注</h3>
-          <p class="text-gray-600">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">感谢您的关注</h3>
+          <p class="text-gray-600 dark:text-gray-300">
             无论是技术交流、项目合作还是简单的问候，我都非常期待收到您的来信。
             让我们一起在技术的道路上互相学习、共同成长！
           </p>
@@ -240,5 +240,9 @@ const copyEmail = async () => {
 <style>
 input:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dark input:focus, .dark textarea:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 </style>

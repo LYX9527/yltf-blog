@@ -4,14 +4,14 @@
     <div class="flex items-center space-x-6">
       <!-- 头像预览 -->
       <div class="relative group">
-        <div class="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border-4 border-white shadow-lg ring-1 ring-black/5">
+        <div class="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 border-4 border-white dark:border-gray-800 shadow-lg ring-1 ring-black/5 dark:ring-white/10">
           <img
             v-if="currentAvatar"
             :src="currentAvatar"
             alt="头像"
             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+          <div v-else class="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
             <UserIcon class="w-8 h-8" />
           </div>
         </div>
@@ -26,14 +26,14 @@
       <div class="flex-1">
         <div class="space-y-3">
           <div>
-            <h4 class="text-lg font-semibold text-gray-900">个人头像</h4>
-            <p class="text-sm text-gray-500">选择一张图片作为您的头像</p>
+            <h4 class="text-lg font-semibold text-gray-900 dark:text-white">个人头像</h4>
+            <p class="text-sm text-gray-500 dark:text-gray-400">选择一张图片作为您的头像</p>
           </div>
 
           <div class="flex space-x-3">
             <button
               @click="openFileDialog"
-              class="inline-flex items-center px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-sm"
+              class="inline-flex items-center px-4 py-2.5 bg-blue-600 dark:bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-sm"
             >
               <PhotoIcon class="w-4 h-4 mr-2" />
               选择图片
@@ -42,14 +42,14 @@
             <button
               v-if="currentAvatar"
               @click="removeAvatar"
-              class="inline-flex items-center px-4 py-2.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200"
+              class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200"
             >
               <TrashIcon class="w-4 h-4 mr-2" />
               移除
             </button>
           </div>
 
-          <p class="text-xs text-gray-400">
+          <p class="text-xs text-gray-400 dark:text-gray-500">
             支持 JPG、PNG 格式，最大 5MB，建议尺寸 400×400 或更大
           </p>
         </div>
@@ -67,14 +67,14 @@
 
     <!-- 裁剪弹窗 -->
     <transition name="modal" appear>
-      <div v-if="showCropper" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+      <div v-if="showCropper" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 dark:bg-black/70 backdrop-blur-sm">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
           <!-- 头部 -->
-          <div class="flex items-center justify-between p-6 border-b border-gray-200">
-            <h3 class="text-xl font-semibold text-gray-900">编辑头像</h3>
+          <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">编辑头像</h3>
             <button
               @click="closeCropper"
-              class="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+              class="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               <XMarkIcon class="w-6 h-6" />
             </button>
@@ -82,8 +82,8 @@
 
           <!-- 裁剪区域 -->
           <div class="p-6">
-            <div class="bg-gray-50 rounded-xl p-4 mb-6">
-              <div class="w-full h-80 bg-white rounded-lg overflow-hidden border border-gray-200 relative">
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 mb-6">
+              <div class="w-full h-80 bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 relative">
                 <canvas
                   ref="canvas"
                   class="max-w-full max-h-full cursor-move"
@@ -97,19 +97,19 @@
 
             <!-- 预览区域 -->
             <div class="mb-6">
-              <h4 class="text-sm font-medium text-gray-900 mb-3">预览效果</h4>
+              <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">预览效果</h4>
               <div class="flex items-center space-x-4">
                 <div class="text-center">
-                  <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 mb-2">
+                  <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-600 mb-2">
                     <canvas ref="previewLarge" width="64" height="64" class="w-full h-full"></canvas>
                   </div>
-                  <span class="text-xs text-gray-500">大头像</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">大头像</span>
                 </div>
                 <div class="text-center">
-                  <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 mb-2">
+                  <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-600 mb-2">
                     <canvas ref="previewSmall" width="48" height="48" class="w-full h-full"></canvas>
                   </div>
-                  <span class="text-xs text-gray-500">小头像</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">小头像</span>
                 </div>
               </div>
             </div>
@@ -119,21 +119,21 @@
               <div class="flex space-x-2">
                 <button
                   @click="rotateLeft"
-                  class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                  class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                   title="向左旋转"
                 >
                   <ArrowPathIcon class="w-5 h-5 transform rotate-180" />
                 </button>
                 <button
                   @click="rotateRight"
-                  class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                  class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                   title="向右旋转"
                 >
                   <ArrowPathIcon class="w-5 h-5" />
                 </button>
                 <button
                   @click="resetCropper"
-                  class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                  class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                   title="重置"
                 >
                   <ArrowUturnLeftIcon class="w-5 h-5" />
@@ -142,7 +142,7 @@
 
               <!-- 缩放滑块 -->
               <div class="flex items-center space-x-3">
-                <span class="text-sm text-gray-500">缩放</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">缩放</span>
                 <input
                   type="range"
                   min="0.1"
@@ -150,25 +150,25 @@
                   step="0.05"
                   v-model="scaleValue"
                   @input="handleScale"
-                  class="w-24 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  class="w-24 h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
             </div>
           </div>
 
           <!-- 底部操作 -->
-          <div class="flex justify-end space-x-3 p-6 bg-gray-50 border-t border-gray-200">
+          <div class="flex justify-end space-x-3 p-6 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
             <button
               @click="closeCropper"
               :disabled="uploading"
-              class="px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50"
+              class="px-6 py-2.5 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50"
             >
               取消
             </button>
             <button
               @click="cropAndUpload"
               :disabled="uploading"
-              class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 min-w-[100px]"
+              class="px-6 py-2.5 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 min-w-[100px]"
             >
               <span v-if="uploading" class="flex items-center justify-center">
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -529,7 +529,9 @@ defineExpose({
 }
 
 .modal-enter-from .bg-white,
-.modal-leave-to .bg-white {
+.modal-leave-to .bg-white,
+.modal-enter-from .dark\\:bg-gray-800,
+.modal-leave-to .dark\\:bg-gray-800 {
   transform: scale(0.95) translateY(-20px);
 }
 
@@ -553,5 +555,16 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode slider styles */
+.dark input[type="range"]::-webkit-slider-thumb {
+  border: 2px solid #374151;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark input[type="range"]::-moz-range-thumb {
+  border: 2px solid #374151;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 </style>

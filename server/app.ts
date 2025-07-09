@@ -15,6 +15,8 @@ import commentsRouter from "./routes/comments";
 import uploadRouter from "./routes/upload";
 import usersRouter from "./routes/users";
 import statsRouter from "./routes/stats";
+import likesRouter from "./routes/likes";
+import aboutRouter from "./routes/about";
 
 const app = express();
 dotenv.config();
@@ -45,6 +47,8 @@ app.use('/api/comments', commentsRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/stats', statsRouter);
+app.use('/api/likes', likesRouter);
+app.use('/api/about', aboutRouter);
 app.use(function (req, res, next) {
     next(createError(404));
 });

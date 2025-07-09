@@ -7,11 +7,11 @@
         @click="handleBackdropClick"
       >
         <!-- 背景遮罩 -->
-        <div class="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
+        <div class="absolute inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm"></div>
 
         <!-- 对话框 -->
         <div
-          class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all"
+          class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full transform transition-all"
           @click.stop
         >
           <!-- 内容区域 -->
@@ -28,13 +28,13 @@
             <!-- 标题 -->
             <h3
               v-if="title"
-              class="text-lg font-semibold text-gray-900 text-center mb-2"
+              class="text-lg font-semibold text-gray-900 dark:text-white text-center mb-2"
             >
               {{ title }}
             </h3>
 
             <!-- 消息内容 -->
-            <div class="text-center text-gray-600 mb-6">
+            <div class="text-center text-gray-600 dark:text-gray-300 mb-6">
               <slot>
                 <p>{{ message }}</p>
               </slot>
@@ -68,7 +68,7 @@
                 v-if="showCancel"
                 @click="handleCancel"
                 :disabled="loading"
-                class="w-full py-3 px-4 rounded-xl font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50"
+                class="w-full py-3 px-4 rounded-xl font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50"
               >
                 {{ cancelText }}
               </button>

@@ -27,17 +27,17 @@
         </div>
 
         <div class="flex-1 min-w-0">
-          <p v-if="toast.title" class="text-sm font-semibold text-gray-900 mb-1">
+          <p v-if="toast.title" class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
             {{ toast.title }}
           </p>
-          <p class="text-sm text-gray-700">
+          <p class="text-sm text-gray-700 dark:text-gray-300">
             {{ toast.message }}
           </p>
         </div>
 
         <button
           @click.stop="removeToast(toast.id)"
-          class="flex-shrink-0 ml-3 text-gray-400 hover:text-gray-600 transition-colors"
+          class="flex-shrink-0 ml-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
         >
           <XMarkIcon class="w-4 h-4" />
         </button>
@@ -74,10 +74,10 @@ const iconComponents = {
 }
 
 const toastClasses = {
-  success: 'bg-white/95 border-green-200',
-  error: 'bg-white/95 border-red-200',
-  warning: 'bg-white/95 border-orange-200',
-  info: 'bg-white/95 border-blue-200'
+  success: 'bg-white/95 dark:bg-gray-800/95 border-green-200 dark:border-green-800',
+  error: 'bg-white/95 dark:bg-gray-800/95 border-red-200 dark:border-red-800',
+  warning: 'bg-white/95 dark:bg-gray-800/95 border-orange-200 dark:border-orange-800',
+  info: 'bg-white/95 dark:bg-gray-800/95 border-blue-200 dark:border-blue-800'
 }
 
 const iconBgClasses = {

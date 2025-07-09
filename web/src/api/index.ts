@@ -30,6 +30,7 @@ export interface Post {
     coverImage?: string
     readTime?: number
     viewCount: number
+    likeCount: number
     createdAt: string
     updatedAt: string
     publishedAt?: string
@@ -52,6 +53,9 @@ export interface Post {
             slug: string
         }
     }[]
+    _count?: {
+        likes: number
+    }
 }
 
 export interface Category {
@@ -109,6 +113,8 @@ export const categoriesApi = {
     getAll: () => api.get<Category[]>('/categories'),
     getBySlug: (slug: string) => api.get<Category>(`/categories/${slug}`),
     create: (data: Partial<Category>) => api.post<Category>('/categories', data),
+    update: (id: string, data: Partial<Category>) => api.put<Category>(`/categories/${id}`, data),
+    delete: (id: string) => api.delete(`/categories/${id}`),
 }
 
 export const tagsApi = {
@@ -142,6 +148,36 @@ export const commentsApi = {
         guestEmail?: string
     }) => api.post<Comment>(`/comments/post/${postId}`, data),
     delete: (commentId: string) => api.delete(`/comments/${commentId}`),
+}
+
+export const likesApi = {
+    toggle: (postId: string) => api.post<{
+        success: boolean
+        isLiked: boolean
+        likeCount: number
+    }>(`/likes/toggle/${postId}`),
+    getStatus: (postId: string) => api.get<{
+        isLiked: boolean
+    }>(`/likes/status/${postId}`),
+}
+
+export interface AboutInfo {
+    id?: string
+    name: string
+    title: string
+    description: string
+    skills: string[]
+    interests: string[]
+    email?: string
+    github?: string
+    linkedin?: string
+    twitter?: string
+    avatar?: string
+}
+
+export const aboutApi = {
+    get: () => api.get<AboutInfo>('/about'),
+    update: (data: Partial<AboutInfo>) => api.post<AboutInfo>('/about', data),
 }
 
 export default api

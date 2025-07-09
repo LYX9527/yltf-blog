@@ -108,6 +108,9 @@ router.get('/', async (req, res) => {
                 select: { id: true, name: true, slug: true }
               }
             }
+          },
+          _count: {
+            select: { likes: true }
           }
         },
         orderBy: { publishedAt: 'desc' }
@@ -177,6 +180,9 @@ router.get('/:slug', async (req, res) => {
               select: { id: true, name: true, slug: true }
             }
           }
+        },
+        _count: {
+          select: { likes: true }
         }
       }
     });

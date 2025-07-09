@@ -112,45 +112,45 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- 主要内容区域 -->
         <div class="lg:col-span-2">
-          <div class="bg-white rounded-lg shadow-sm">
-            <div class="p-6 border-b border-gray-200">
-              <h1 class="text-2xl font-bold text-gray-900">文章归档</h1>
-              <p class="text-gray-600 mt-1">
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">文章归档</h1>
+              <p class="text-gray-600 dark:text-gray-300 mt-1">
                 按时间浏览所有文章 (共 {{ posts.length }} 篇)
               </p>
             </div>
 
             <div v-if="loading" class="p-8 text-center">
-              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p class="text-gray-500 mt-2">加载中...</p>
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+              <p class="text-gray-500 dark:text-gray-400 mt-2">加载中...</p>
             </div>
 
             <div v-else-if="error" class="p-8 text-center">
-              <p class="text-red-600 mb-4">{{ error }}</p>
+              <p class="text-red-600 dark:text-red-400 mb-4">{{ error }}</p>
               <button
                 @click="fetchPosts"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
               >
                 重试
               </button>
             </div>
 
             <div v-else-if="posts.length === 0" class="p-8 text-center">
-              <p class="text-gray-500 mb-4">还没有发布任何文章</p>
+              <p class="text-gray-500 dark:text-gray-400 mb-4">还没有发布任何文章</p>
               <RouterLink
                 to="/"
-                class="text-blue-600 hover:text-blue-800"
+                class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
               >
                 返回首页
               </RouterLink>
             </div>
 
-            <div v-else class="divide-y divide-gray-200">
+            <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
               <div
                 v-for="yearData in postsByYear"
                 :key="yearData.year"
@@ -164,13 +164,13 @@ onMounted(() => {
                   <div class="flex items-center">
                     <component
                       :is="expandedYears.has(yearData.year) ? ChevronDownIcon : ChevronRightIcon"
-                      class="h-5 w-5 text-gray-500 mr-2 transition-transform"
+                      class="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2 transition-transform"
                     />
-                    <h2 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {{ yearData.year }} 年
                     </h2>
                   </div>
-                  <span class="text-sm text-gray-500">
+                  <span class="text-sm text-gray-500 dark:text-gray-400">
                     {{ getTotalPostsInYear(yearData) }} 篇文章
                   </span>
                 </button>
@@ -181,9 +181,9 @@ onMounted(() => {
                     v-for="monthData in yearData.months"
                     :key="monthData.month"
                   >
-                    <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
                       {{ monthData.monthName }}
-                      <span class="text-sm text-gray-500 font-normal">
+                      <span class="text-sm text-gray-500 dark:text-gray-400 font-normal">
                         ({{ monthData.posts.length }} 篇)
                       </span>
                     </h3>
@@ -196,7 +196,7 @@ onMounted(() => {
                       >
                         <RouterLink
                           :to="`/posts/${post.slug}`"
-                          class="block p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors"
+                          class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
                         >
                           <div class="flex items-start space-x-4">
                             <!-- 文章缩略图 -->
@@ -219,20 +219,20 @@ onMounted(() => {
                             <!-- 文章信息 -->
                             <div class="flex-1 min-w-0">
                               <div class="flex items-center justify-between mb-1">
-                                <h4 class="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                                <h4 class="text-lg font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
                                   {{ post.title }}
                                 </h4>
-                                <time class="text-sm text-gray-500 flex-shrink-0 ml-2">
+                                <time class="text-sm text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">
                                   {{ formatDate(post.publishedAt || post.createdAt) }}
                                 </time>
                               </div>
 
-                              <p v-if="post.excerpt" class="text-gray-600 text-sm line-clamp-2 mb-2">
+                              <p v-if="post.excerpt" class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-2">
                                 {{ post.excerpt }}
                               </p>
 
                               <div class="flex items-center justify-between">
-                                <div class="flex items-center text-xs text-gray-500 space-x-4">
+                                <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 space-x-4">
                                   <span class="flex items-center">
                                     <UserIcon class="h-3 w-3 mr-1" />
                                     {{ post.author.name || post.author.username }}
@@ -251,7 +251,7 @@ onMounted(() => {
                                   <span
                                     v-for="tag in post.tags.slice(0, 2)"
                                     :key="tag.tag.id"
-                                    class="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded-full"
+                                    class="px-2 py-1 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs rounded-full"
                                   >
                                     {{ tag.tag.name }}
                                   </span>

@@ -1,6 +1,7 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import { authenticate, optionalAuth, requireAdmin } from '../middleware/auth';
+import { commentRateLimit, getIPCommentStats } from '../middleware/rateLimit';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -100,7 +101,7 @@ router.get('/post/:postId', async (req: AuthRequest, res) => {
 });
 
 // 创建评论
-router.post('/post/:postId', optionalAuth, async (req: AuthRequest, res) => {
+router.post('/post/:postId', optionalAuth, commentRateLimit, async (req: AuthRequest, res) => {
   try {
     const { postId } = req.params;
     const { content, parentId, guestName, guestEmail } = req.body;
@@ -202,5 +203,8 @@ router.delete('/:commentId', authenticate, async (req: AuthRequest, res) => {
     res.status(500).json({ error: '删除评论失败' });
   }
 });
+
+// 获取IP评论状态（调试用）
+router.get('/rate-limit-status', getIPCommentStats);
 
 export default router;

@@ -91,12 +91,12 @@ const goToToday = () => {
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-sm p-4">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 border border-gray-200 dark:border-gray-700">
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-lg font-semibold text-gray-900">文章日历</h3>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">文章日历</h3>
       <button
         @click="goToToday"
-        class="text-sm text-blue-600 hover:text-blue-800"
+        class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
       >
         今天
       </button>
@@ -106,20 +106,20 @@ const goToToday = () => {
     <div class="flex items-center justify-between mb-4">
       <button
         @click="previousMonth"
-        class="p-1 hover:bg-gray-100 rounded"
+        class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
       >
-        <ChevronLeftIcon class="h-5 w-5 text-gray-600" />
+        <ChevronLeftIcon class="h-5 w-5 text-gray-600 dark:text-gray-400" />
       </button>
 
-      <h4 class="font-medium text-gray-900">
+      <h4 class="font-medium text-gray-900 dark:text-white">
         {{ year }}年{{ monthNames[month] }}
       </h4>
 
       <button
         @click="nextMonth"
-        class="p-1 hover:bg-gray-100 rounded"
+        class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
       >
-        <ChevronRightIcon class="h-5 w-5 text-gray-600" />
+        <ChevronRightIcon class="h-5 w-5 text-gray-600 dark:text-gray-400" />
       </button>
     </div>
 
@@ -129,7 +129,7 @@ const goToToday = () => {
       <div
         v-for="day in weekDays"
         :key="day"
-        class="py-2 text-xs font-medium text-gray-500"
+        class="py-2 text-xs font-medium text-gray-500 dark:text-gray-400"
       >
         {{ day }}
       </div>
@@ -142,13 +142,13 @@ const goToToday = () => {
         :class="[
           'h-8 text-sm rounded transition-colors',
           dayInfo.isCurrentMonth
-            ? 'text-gray-900'
-            : 'text-gray-300',
+            ? 'text-gray-900 dark:text-gray-100'
+            : 'text-gray-300 dark:text-gray-600',
           dayInfo.hasPost && dayInfo.isCurrentMonth
-            ? 'bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer'
+            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800/50 cursor-pointer'
             : '',
           !dayInfo.hasPost && dayInfo.isCurrentMonth
-            ? 'hover:bg-gray-100'
+            ? 'hover:bg-gray-100 dark:hover:bg-gray-700'
             : '',
           !dayInfo.isCurrentMonth
             ? 'cursor-not-allowed'
@@ -160,10 +160,10 @@ const goToToday = () => {
       </button>
     </div>
 
-    <div class="mt-4 text-xs text-gray-500">
+    <div class="mt-4 text-xs text-gray-500 dark:text-gray-400">
       <div class="flex items-center space-x-4">
         <div class="flex items-center">
-          <div class="w-3 h-3 bg-blue-100 rounded mr-1"></div>
+          <div class="w-3 h-3 bg-blue-100 dark:bg-blue-900/30 rounded mr-1"></div>
           <span>有文章</span>
         </div>
       </div>

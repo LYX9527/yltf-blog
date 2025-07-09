@@ -86,16 +86,16 @@ const switchMode = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
+      <h2 class="mt-6 text-center text-3xl font-bold text-gray-900 dark:text-white">
         {{ isLogin ? '登录账号' : '注册账号' }}
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
+      <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
         {{ isLogin ? '还没有账号？' : '已有账号？' }}
         <button
           @click="switchMode"
-          class="font-medium text-blue-600 hover:text-blue-500"
+          class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300"
         >
           {{ isLogin ? '立即注册' : '立即登录' }}
         </button>
@@ -103,16 +103,16 @@ const switchMode = () => {
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
         <!-- 错误提示 -->
-        <div v-if="error" class="mb-4 bg-red-50 border border-red-200 rounded-md p-4">
-          <p class="text-red-800 text-sm">{{ error }}</p>
+        <div v-if="error" class="mb-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-md p-4">
+          <p class="text-red-800 dark:text-red-200 text-sm">{{ error }}</p>
         </div>
 
         <!-- 登录表单 -->
         <form v-if="isLogin" @submit.prevent="handleLogin" class="space-y-6">
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               邮箱地址
             </label>
             <div class="mt-1">
@@ -121,14 +121,14 @@ const switchMode = () => {
                 v-model="loginForm.email"
                 type="email"
                 required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="请输入邮箱地址"
               />
             </div>
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               密码
             </label>
             <div class="mt-1 relative">
@@ -137,7 +137,7 @@ const switchMode = () => {
                 v-model="loginForm.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
-                class="appearance-none block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                class="appearance-none block w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="请输入密码"
               />
               <button
@@ -145,8 +145,8 @@ const switchMode = () => {
                 @click="showPassword = !showPassword"
                 class="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
-                <EyeIcon v-if="!showPassword" class="h-5 w-5 text-gray-400" />
-                <EyeSlashIcon v-else class="h-5 w-5 text-gray-400" />
+                <EyeIcon v-if="!showPassword" class="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <EyeSlashIcon v-else class="h-5 w-5 text-gray-400 dark:text-gray-500" />
               </button>
             </div>
           </div>
@@ -155,7 +155,7 @@ const switchMode = () => {
             <button
               type="submit"
               :disabled="loading"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ loading ? '登录中...' : '登录' }}
             </button>
@@ -165,7 +165,7 @@ const switchMode = () => {
         <!-- 注册表单 -->
         <form v-else @submit.prevent="handleRegister" class="space-y-6">
           <div>
-            <label for="username" class="block text-sm font-medium text-gray-700">
+            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               用户名 *
             </label>
             <div class="mt-1">
@@ -174,14 +174,14 @@ const switchMode = () => {
                 v-model="registerForm.username"
                 type="text"
                 required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="请输入用户名"
               />
             </div>
           </div>
 
           <div>
-            <label for="register-email" class="block text-sm font-medium text-gray-700">
+            <label for="register-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               邮箱地址 *
             </label>
             <div class="mt-1">
@@ -190,14 +190,14 @@ const switchMode = () => {
                 v-model="registerForm.email"
                 type="email"
                 required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="请输入邮箱地址"
               />
             </div>
           </div>
 
           <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               姓名
             </label>
             <div class="mt-1">
@@ -205,14 +205,14 @@ const switchMode = () => {
                 id="name"
                 v-model="registerForm.name"
                 type="text"
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="请输入真实姓名（可选）"
               />
             </div>
           </div>
 
           <div>
-            <label for="register-password" class="block text-sm font-medium text-gray-700">
+            <label for="register-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               密码 *
             </label>
             <div class="mt-1 relative">
@@ -221,7 +221,7 @@ const switchMode = () => {
                 v-model="registerForm.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
-                class="appearance-none block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                class="appearance-none block w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="请输入密码（至少6位）"
               />
               <button
@@ -229,14 +229,14 @@ const switchMode = () => {
                 @click="showPassword = !showPassword"
                 class="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
-                <EyeIcon v-if="!showPassword" class="h-5 w-5 text-gray-400" />
-                <EyeSlashIcon v-else class="h-5 w-5 text-gray-400" />
+                <EyeIcon v-if="!showPassword" class="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <EyeSlashIcon v-else class="h-5 w-5 text-gray-400 dark:text-gray-500" />
               </button>
             </div>
           </div>
 
           <div>
-            <label for="confirm-password" class="block text-sm font-medium text-gray-700">
+            <label for="confirm-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               确认密码 *
             </label>
             <div class="mt-1">
@@ -245,7 +245,7 @@ const switchMode = () => {
                 v-model="registerForm.confirmPassword"
                 type="password"
                 required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="请再次输入密码"
               />
             </div>
@@ -255,7 +255,7 @@ const switchMode = () => {
             <button
               type="submit"
               :disabled="loading"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ loading ? '注册中...' : '注册' }}
             </button>

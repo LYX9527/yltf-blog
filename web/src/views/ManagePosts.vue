@@ -98,8 +98,8 @@ const formatDate = (dateString: string) => {
 }
 
 const getStatusColor = (post: Post) => {
-  if (post.published) return 'bg-green-100 text-green-800'
-  return 'bg-yellow-100 text-yellow-800'
+  if (post.published) return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+  return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
 }
 
 const getStatusText = (post: Post) => {
@@ -109,18 +109,18 @@ const getStatusText = (post: Post) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <div class="bg-white rounded-lg shadow-sm">
-        <div class="p-6 border-b border-gray-200">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
           <div class="flex items-center justify-between">
             <div>
-              <h1 class="text-2xl font-bold text-gray-900">文章管理</h1>
-              <p class="text-gray-600 mt-1">管理你的所有文章</p>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">文章管理</h1>
+              <p class="text-gray-600 dark:text-gray-300 mt-1">管理你的所有文章</p>
             </div>
             <RouterLink
               to="/create"
-              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
             >
               创建新文章
             </RouterLink>
@@ -128,53 +128,53 @@ const getStatusText = (post: Post) => {
         </div>
         
         <div v-if="loading" class="p-8 text-center">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p class="text-gray-500 mt-2">加载中...</p>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+          <p class="text-gray-500 dark:text-gray-400 mt-2">加载中...</p>
         </div>
         
         <div v-else-if="error" class="p-8 text-center">
-          <p class="text-red-600 mb-4">{{ error }}</p>
+          <p class="text-red-600 dark:text-red-400 mb-4">{{ error }}</p>
           <button
             @click="fetchPosts"
-            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
           >
             重试
           </button>
         </div>
         
         <div v-else-if="posts.length === 0" class="p-8 text-center">
-          <p class="text-gray-500 mb-4">还没有任何文章</p>
+          <p class="text-gray-500 dark:text-gray-400 mb-4">还没有任何文章</p>
           <RouterLink
             to="/create"
-            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
           >
             创建第一篇文章
           </RouterLink>
         </div>
         
         <div v-else class="overflow-hidden">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   文章信息
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   状态
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   分类
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   创建时间
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   操作
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="post in posts" :key="post.id" class="hover:bg-gray-50">
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tr v-for="post in posts" :key="post.id" class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td class="px-6 py-4">
                   <div class="flex items-start space-x-3">
                     <div v-if="post.coverImage" class="flex-shrink-0">
@@ -190,13 +190,13 @@ const getStatusText = (post: Post) => {
                       </div>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 truncate">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
                         {{ post.title }}
                       </p>
-                      <p v-if="post.excerpt" class="text-sm text-gray-500 line-clamp-2">
+                      <p v-if="post.excerpt" class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
                         {{ post.excerpt }}
                       </p>
-                      <div class="flex items-center mt-1 text-xs text-gray-400 space-x-4">
+                      <div class="flex items-center mt-1 text-xs text-gray-400 dark:text-gray-500 space-x-4">
                         <span v-if="post.readTime" class="flex items-center">
                           <ClockIcon class="h-3 w-3 mr-1" />
                           {{ post.readTime }}分钟
@@ -217,23 +217,23 @@ const getStatusText = (post: Post) => {
                     {{ getStatusText(post) }}
                   </span>
                   <div v-if="post.featured" class="mt-1">
-                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
                       精选
                     </span>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <span v-if="post.category" class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <span v-if="post.category" class="px-2 py-1 bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-full text-xs">
                     {{ post.category.name }}
                   </span>
-                  <span v-else class="text-gray-400">无分类</span>
+                  <span v-else class="text-gray-400 dark:text-gray-500">无分类</span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                   <div class="flex items-center">
                     <CalendarIcon class="h-4 w-4 mr-1" />
                     {{ formatDate(post.createdAt) }}
                   </div>
-                  <div v-if="post.publishedAt" class="text-xs text-gray-400 mt-1">
+                  <div v-if="post.publishedAt" class="text-xs text-gray-400 dark:text-gray-500 mt-1">
                     发布: {{ formatDate(post.publishedAt) }}
                   </div>
                 </td>
@@ -241,14 +241,14 @@ const getStatusText = (post: Post) => {
                   <div class="flex items-center space-x-2">
                     <RouterLink
                       :to="`/posts/${post.slug}`"
-                      class="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50"
+                      class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20"
                       title="查看文章"
                     >
                       <EyeIcon class="h-4 w-4" />
                     </RouterLink>
                     <RouterLink
                       :to="`/edit/${post.slug}`"
-                      class="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-50"
+                      class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 p-1 rounded hover:bg-green-50 dark:hover:bg-green-900/20"
                       title="编辑文章"
                     >
                       <PencilIcon class="h-4 w-4" />
@@ -260,8 +260,8 @@ const getStatusText = (post: Post) => {
                       :class="[
                         'p-1 rounded transition-colors disabled:opacity-50',
                         post.published 
-                          ? 'text-orange-600 hover:text-orange-900 hover:bg-orange-50' 
-                          : 'text-green-600 hover:text-green-900 hover:bg-green-50'
+                          ? 'text-orange-600 dark:text-orange-400 hover:text-orange-900 dark:hover:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/20' 
+                          : 'text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20'
                       ]"
                       :title="post.published ? '隐藏文章' : '发布文章'"
                     >
@@ -272,7 +272,7 @@ const getStatusText = (post: Post) => {
                       type="button"
                       @click="deletePost(post)"
                       :disabled="deleteLoading === post.id"
-                      class="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 disabled:opacity-50"
+                      class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-50"
                       title="删除文章"
                     >
                       <TrashIcon class="h-4 w-4" />

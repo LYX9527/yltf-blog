@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { EnvelopeIcon, CodeBracketIcon, HeartIcon } from '@heroicons/vue/24/outline'
+import { aboutApi, type AboutInfo } from '../api'
 
 // 关于我的信息
-const aboutInfo = ref({
+const aboutInfo = ref<AboutInfo>({
   name: 'Blog Author',
   title: '一个不甘心一直写业务代码的程序员！！',
   description: `作为一名程序员，我不满足于日复一日的业务逻辑编写。我渴望探索技术的深度，追求代码的艺术性，致力于创造有意义的产品。
@@ -21,34 +22,29 @@ const aboutInfo = ref({
   ],
   interests: [
     '开源项目贡献',
-    '技术架构设计', 
+    '技术架构设计',
     '产品思维',
     '用户体验',
     '技术写作',
     '团队协作'
-  ]
+  ],
+  email: 'fp4u5h7k@gmail.com'
 })
 
-const contactInfo = ref({
-  email: 'fp4u5h7k@gmail.com',
-  github: '',
-  linkedin: '',
-  twitter: ''
-})
+const loading = ref(true)
+const error = ref('')
 
-// 从localStorage加载关于我的信息
-const loadAboutInfo = () => {
+// 从API加载关于我的信息
+const loadAboutInfo = async () => {
   try {
-    const savedData = localStorage.getItem('aboutInfo')
-    if (savedData) {
-      const data = JSON.parse(savedData)
-      aboutInfo.value = {
-        ...aboutInfo.value,
-        ...data
-      }
-    }
-  } catch (error) {
-    console.error('加载关于我信息失败:', error)
+    loading.value = true
+    const response = await aboutApi.get()
+    aboutInfo.value = response.data
+  } catch (err) {
+    console.error('加载关于我信息失败:', err)
+    error.value = '加载失败，请稍后重试'
+  } finally {
+    loading.value = false
   }
 }
 
@@ -58,16 +54,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">关于我</h1>
-        <p class="text-xl text-gray-600">了解更多关于我的信息</p>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">关于我</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-300">了解更多关于我的信息</p>
+      </div>
+
+      <!-- 加载状态 -->
+      <div v-if="loading" class="flex justify-center items-center h-64">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+      </div>
+
+      <!-- 错误状态 -->
+      <div v-else-if="error" class="text-center py-16">
+        <p class="text-red-600 dark:text-red-400 mb-4">{{ error }}</p>
+        <button
+          @click="loadAboutInfo"
+          class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600"
+        >
+          重试
+        </button>
       </div>
 
       <!-- 主要内容 -->
-      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
         <!-- 个人介绍卡片 -->
         <div class="p-8">
           <div class="flex items-center mb-6">
@@ -75,34 +87,34 @@ onMounted(() => {
               <CodeBracketIcon class="h-10 w-10 text-white" />
             </div>
             <div class="ml-6">
-              <h2 class="text-2xl font-bold text-gray-900">{{ aboutInfo.name }}</h2>
-              <p class="text-lg text-blue-600 font-medium">{{ aboutInfo.title }}</p>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ aboutInfo.name }}</h2>
+              <p class="text-lg text-blue-600 dark:text-blue-400 font-medium">{{ aboutInfo.title }}</p>
             </div>
           </div>
 
           <!-- 详细描述 -->
           <div class="prose prose-lg max-w-none">
-            <div class="text-gray-700 leading-relaxed whitespace-pre-line">
+            <div class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
               {{ aboutInfo.description }}
             </div>
           </div>
         </div>
 
-        <div class="border-t border-gray-200"></div>
+        <div class="border-t border-gray-200 dark:border-gray-700"></div>
 
         <!-- 技能和兴趣 -->
         <div class="grid md:grid-cols-2 gap-8 p-8">
           <!-- 技术技能 -->
           <div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <CodeBracketIcon class="h-6 w-6 mr-2 text-blue-500" />
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <CodeBracketIcon class="h-6 w-6 mr-2 text-blue-500 dark:text-blue-400" />
               技术技能
             </h3>
             <div class="flex flex-wrap gap-2">
-              <span 
-                v-for="skill in aboutInfo.skills" 
+              <span
+                v-for="skill in aboutInfo.skills"
                 :key="skill"
-                class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium"
               >
                 {{ skill }}
               </span>
@@ -111,15 +123,15 @@ onMounted(() => {
 
           <!-- 兴趣爱好 -->
           <div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <HeartIcon class="h-6 w-6 mr-2 text-red-500" />
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <HeartIcon class="h-6 w-6 mr-2 text-red-500 dark:text-red-400" />
               兴趣爱好
             </h3>
             <div class="flex flex-wrap gap-2">
-              <span 
-                v-for="interest in aboutInfo.interests" 
+              <span
+                v-for="interest in aboutInfo.interests"
                 :key="interest"
-                class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium"
+                class="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded-full text-sm font-medium"
               >
                 {{ interest }}
               </span>
@@ -127,23 +139,56 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="border-t border-gray-200"></div>
+        <div class="border-t border-gray-200 dark:border-gray-700"></div>
 
         <!-- 联系方式 -->
         <div class="p-8">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <EnvelopeIcon class="h-6 w-6 mr-2 text-green-500" />
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <EnvelopeIcon class="h-6 w-6 mr-2 text-green-500 dark:text-green-400" />
             联系我
           </h3>
-          <div class="bg-gray-50 rounded-lg p-6">
-            <div class="flex items-center">
-              <EnvelopeIcon class="h-5 w-5 text-gray-400 mr-3" />
-              <span class="text-gray-600 mr-2">邮箱:</span>
-              <a 
-                :href="`mailto:${contactInfo.email}`"
-                class="text-blue-600 hover:text-blue-800 font-medium"
+          <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+            <div v-if="aboutInfo.email" class="flex items-center mb-3">
+              <EnvelopeIcon class="h-5 w-5 text-gray-400 dark:text-gray-500 mr-3" />
+              <span class="text-gray-600 dark:text-gray-300 mr-2">邮箱:</span>
+              <a
+                :href="`mailto:${aboutInfo.email}`"
+                class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
               >
-                {{ contactInfo.email }}
+                {{ aboutInfo.email }}
+              </a>
+            </div>
+            <div v-if="aboutInfo.github" class="flex items-center mb-3">
+              <span class="text-gray-600 dark:text-gray-300 mr-2">GitHub:</span>
+              <a
+                :href="aboutInfo.github"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+              >
+                {{ aboutInfo.github }}
+              </a>
+            </div>
+            <div v-if="aboutInfo.linkedin" class="flex items-center mb-3">
+              <span class="text-gray-600 dark:text-gray-300 mr-2">LinkedIn:</span>
+              <a
+                :href="aboutInfo.linkedin"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+              >
+                {{ aboutInfo.linkedin }}
+              </a>
+            </div>
+            <div v-if="aboutInfo.twitter" class="flex items-center">
+              <span class="text-gray-600 dark:text-gray-300 mr-2">Twitter:</span>
+              <a
+                :href="aboutInfo.twitter"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+              >
+                {{ aboutInfo.twitter }}
               </a>
             </div>
           </div>
@@ -151,9 +196,9 @@ onMounted(() => {
       </div>
 
       <!-- 博客说明 -->
-      <div class="mt-12 bg-white rounded-lg shadow-sm p-8">
-        <h3 class="text-2xl font-bold text-gray-900 mb-4">关于这个博客</h3>
-        <div class="prose prose-lg max-w-none text-gray-700">
+      <div class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">关于这个博客</h3>
+        <div class="prose prose-lg max-w-none text-gray-700 dark:text-gray-300">
           <p>
             这个博客是我技术学习和思考的记录地。在这里，我会分享：
           </p>
@@ -189,5 +234,10 @@ onMounted(() => {
 
 .prose li {
   margin-bottom: 0.25rem;
+}
+
+/* Dark mode styles */
+.dark .prose {
+  color: #d1d5db;
 }
 </style>

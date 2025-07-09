@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { CalendarIcon, ClockIcon, EyeIcon, UserIcon, TagIcon } from '@heroicons/vue/24/outline'
+import { CalendarIcon, ClockIcon, EyeIcon, UserIcon, TagIcon, HeartIcon } from '@heroicons/vue/24/outline'
+import { HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
 import { marked } from 'marked'
 import 'highlight.js/styles/github.css'
-import { postsApi, type Post, getFullImageUrl } from '../api'
+import { postsApi, likesApi, type Post, getFullImageUrl } from '../api'
+import { useAuthStore } from '../stores/auth'
+import { useToast } from '../composables/useToast'
 import Sidebar from '../components/Sidebar.vue'
 import Comments from '../components/Comments.vue'
 
 const route = useRoute()
+const authStore = useAuthStore()
+const { toast } = useToast()
 const post = ref<Post | null>(null)
 const loading = ref(true)
 const error = ref('')
+const isLiked = ref(false)
+const likeCount = ref(0)
+const likePending = ref(false)
 
 const slug = computed(() => route.params.slug as string)
 
@@ -29,11 +37,48 @@ const fetchPost = async () => {
     loading.value = true
     const response = await postsApi.getBySlug(slug.value)
     post.value = response.data
+    
+    // 设置点赞数
+    likeCount.value = post.value.likeCount || post.value._count?.likes || 0
+    
+    // 如果用户已登录，获取点赞状态
+    if (authStore.isLoggedIn && post.value) {
+      try {
+        const likeResponse = await likesApi.getStatus(post.value.id)
+        isLiked.value = likeResponse.data.isLiked
+      } catch (err) {
+        console.error('Failed to fetch like status:', err)
+      }
+    }
   } catch (err) {
     error.value = '文章不存在或加载失败'
     console.error('Failed to fetch post:', err)
   } finally {
     loading.value = false
+  }
+}
+
+const handleLike = async () => {
+  if (!authStore.isLoggedIn) {
+    toast.error('请先登录才能点赞')
+    return
+  }
+  
+  if (!post.value || likePending.value) return
+  
+  try {
+    likePending.value = true
+    const response = await likesApi.toggle(post.value.id)
+    
+    isLiked.value = response.data.isLiked
+    likeCount.value = response.data.likeCount
+    
+    toast.success(response.data.isLiked ? '点赞成功' : '取消点赞')
+  } catch (err) {
+    console.error('Failed to toggle like:', err)
+    toast.error('操作失败，请重试')
+  } finally {
+    likePending.value = false
   }
 }
 
@@ -55,18 +100,18 @@ const formatContent = (content: string) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- 主要内容区域 -->
         <div class="lg:col-span-2">
           <div v-if="loading" class="flex justify-center items-center h-64">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
           </div>
 
           <div v-else-if="error" class="text-center py-16">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ error }}</h2>
-            <RouterLink to="/" class="text-blue-600 hover:text-blue-800">返回首页</RouterLink>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ error }}</h2>
+            <RouterLink to="/" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">返回首页</RouterLink>
           </div>
 
           <article v-else-if="post">
@@ -83,17 +128,17 @@ const formatContent = (content: string) => {
                 <div v-if="post.category" class="mb-4">
                   <RouterLink
                     :to="`/category/${post.category.slug}`"
-                    class="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full hover:bg-blue-200 transition-colors"
+                    class="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-sm rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors"
                   >
                     {{ post.category.name }}
                   </RouterLink>
                 </div>
 
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                   {{ post.title }}
                 </h1>
 
-                <div class="flex flex-wrap items-center text-sm text-gray-500 space-x-6 mb-4">
+                <div class="flex flex-wrap items-center text-sm text-gray-500 dark:text-gray-400 space-x-6 mb-4">
                   <div class="flex items-center">
                     <UserIcon class="h-4 w-4 mr-1" />
                     <span>{{ post.author.name || post.author.username }}</span>
@@ -113,6 +158,26 @@ const formatContent = (content: string) => {
                     <EyeIcon class="h-4 w-4 mr-1" />
                     <span>{{ post.viewCount }} 次阅读</span>
                   </div>
+
+                  <!-- 点赞按钮 -->
+                  <div class="flex items-center">
+                    <button
+                      @click="handleLike"
+                      :disabled="likePending"
+                      :class="[
+                        'flex items-center space-x-1 px-3 py-1 rounded-full transition-all duration-200 disabled:opacity-50',
+                        isLiked 
+                          ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-800/50' 
+                          : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-red-500 dark:hover:text-red-400'
+                      ]"
+                    >
+                      <component
+                        :is="isLiked ? HeartIconSolid : HeartIcon"
+                        class="h-4 w-4"
+                      />
+                      <span>{{ likeCount }}</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div v-if="post.tags.length > 0" class="flex flex-wrap gap-2 mb-6">
@@ -120,7 +185,7 @@ const formatContent = (content: string) => {
                     v-for="tag in post.tags"
                     :key="tag.tag.id"
                     :to="`/tag/${tag.tag.slug}`"
-                    class="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors"
+                    class="inline-flex items-center px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                   >
                     <TagIcon class="h-3 w-3 mr-1" />
                     {{ tag.tag.name }}
@@ -129,14 +194,14 @@ const formatContent = (content: string) => {
               </div>
             </header>
 
-            <div class="bg-white rounded-lg shadow-sm p-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
               <div
                 class="prose prose-lg max-w-none"
                 v-html="formatContent(post.content)"
               ></div>
             </div>
 
-            <footer v-if="post.author.bio" class="mt-12 bg-white rounded-lg shadow-sm p-8">
+            <footer v-if="post.author.bio" class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
               <div class="flex items-start space-x-4">
                 <div v-if="post.author.avatar" class="flex-shrink-0">
                   <img
@@ -154,10 +219,10 @@ const formatContent = (content: string) => {
                 </div>
 
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
                     {{ post.author.name || post.author.username }}
                   </h3>
-                  <p class="text-gray-600">{{ post.author.bio }}</p>
+                  <p class="text-gray-600 dark:text-gray-300">{{ post.author.bio }}</p>
                 </div>
               </div>
             </footer>
@@ -165,14 +230,14 @@ const formatContent = (content: string) => {
             <nav class="mt-8 flex justify-between">
               <RouterLink
                 to="/posts"
-                class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
                 ← 返回文章列表
               </RouterLink>
             </nav>
 
             <!-- 评论区域 -->
-            <Comments :post-id="post.id" />
+            <Comments :post-id="post.id" :post-author-id="post.author.id" />
           </article>
         </div>
 
@@ -201,6 +266,19 @@ const formatContent = (content: string) => {
   margin-bottom: 1rem;
 }
 
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
+  color: #f9fafb;
+}
+
+.dark .prose p {
+  color: #e5e7eb;
+}
+
 .prose h1 {
   font-size: 2rem;
 }
@@ -223,6 +301,11 @@ const formatContent = (content: string) => {
   padding-left: 2rem;
 }
 
+.dark .prose ul,
+.dark .prose ol {
+  color: #e5e7eb;
+}
+
 .prose li {
   margin-bottom: 0.5rem;
 }
@@ -235,11 +318,21 @@ const formatContent = (content: string) => {
   color: #6b7280;
 }
 
+.dark .prose blockquote {
+  border-left: 4px solid #4b5563;
+  color: #9ca3af;
+}
+
 .prose code {
   background-color: #f3f4f6;
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
+}
+
+.dark .prose code {
+  background-color: #374151;
+  color: #f9fafb;
 }
 
 .prose pre {
@@ -249,6 +342,10 @@ const formatContent = (content: string) => {
   border-radius: 0.5rem;
   overflow-x: auto;
   margin: 1.5rem 0;
+}
+
+.dark .prose pre {
+  background-color: #111827;
 }
 
 .prose pre code {

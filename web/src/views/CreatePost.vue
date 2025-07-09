@@ -113,22 +113,22 @@ const savePost = async (published: boolean) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <div class="bg-white rounded-lg shadow-sm">
-        <div class="p-6 border-b border-gray-200">
-          <h1 class="text-2xl font-bold text-gray-900">创建新文章</h1>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">创建新文章</h1>
         </div>
 
         <form @submit.prevent="publishPost" class="p-6 space-y-6">
           <!-- 错误提示 -->
-          <div v-if="error" class="bg-red-50 border border-red-200 rounded-md p-4">
-            <p class="text-red-800">{{ error }}</p>
+          <div v-if="error" class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-md p-4">
+            <p class="text-red-800 dark:text-red-200">{{ error }}</p>
           </div>
 
           <!-- 标题 -->
           <div>
-            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               文章标题 *
             </label>
             <input
@@ -136,7 +136,7 @@ const savePost = async (published: boolean) => {
               v-model="form.title"
               type="text"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200"
               placeholder="请输入文章标题..."
             />
           </div>
@@ -144,13 +144,13 @@ const savePost = async (published: boolean) => {
           <!-- 摘要 -->
           <div>
             <div class="flex items-center justify-between mb-2">
-              <label for="excerpt" class="block text-sm font-medium text-gray-700">
+              <label for="excerpt" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 文章摘要
               </label>
               <button
                 type="button"
                 @click="generateExcerpt"
-                class="text-sm text-blue-600 hover:text-blue-800"
+                class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
               >
                 从内容生成
               </button>
@@ -159,7 +159,7 @@ const savePost = async (published: boolean) => {
               id="excerpt"
               v-model="form.excerpt"
               rows="3"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200"
               placeholder="请输入文章摘要（可选）..."
             ></textarea>
           </div>
@@ -168,13 +168,13 @@ const savePost = async (published: boolean) => {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- 分类 -->
             <div>
-              <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 分类
               </label>
               <select
                 id="category"
                 v-model="form.categoryId"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200"
               >
                 <option value="">选择分类</option>
                 <option
@@ -189,7 +189,7 @@ const savePost = async (published: boolean) => {
 
             <!-- 标签 -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 标签
               </label>
 
@@ -198,13 +198,13 @@ const savePost = async (published: boolean) => {
                 <span
                   v-for="tag in selectedTags"
                   :key="tag.id"
-                  class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                  class="inline-flex items-center px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-sm rounded-full"
                 >
                   {{ tag.name }}
                   <button
                     type="button"
                     @click="removeTag(tag.id)"
-                    class="ml-1 text-blue-600 hover:text-blue-800"
+                    class="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                   >
                     <XMarkIcon class="h-3 w-3" />
                   </button>
@@ -218,7 +218,7 @@ const savePost = async (published: boolean) => {
                   :key="tag.id"
                   type="button"
                   @click="addTag(tag)"
-                  class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+                  class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                 >
                   {{ tag.name }}
                 </button>
@@ -230,14 +230,14 @@ const savePost = async (published: boolean) => {
                   v-model="newTagName"
                   type="text"
                   placeholder="新标签名称"
-                  class="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                  class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200"
                   @keyup.enter="createNewTag"
                 />
                 <button
                   type="button"
                   @click="createNewTag"
                   :disabled="!newTagName.trim()"
-                  class="px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="px-2 py-1 bg-blue-500 dark:bg-blue-600 text-white text-sm rounded hover:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <PlusIcon class="h-4 w-4" />
                 </button>
@@ -247,7 +247,7 @@ const savePost = async (published: boolean) => {
 
           <!-- 封面图片 -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               封面图片
             </label>
             <ImageUpload
@@ -259,7 +259,7 @@ const savePost = async (published: boolean) => {
 
           <!-- Markdown 编辑器 -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               文章内容 * (支持 Markdown)
             </label>
             <MarkdownEditor
@@ -270,7 +270,7 @@ const savePost = async (published: boolean) => {
           </div>
 
           <!-- 发布设置 -->
-          <div class="space-y-4 pt-4 border-t border-gray-200">
+          <div class="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div class="flex items-center space-x-6">
               <label class="flex items-center">
                 <input
@@ -278,16 +278,16 @@ const savePost = async (published: boolean) => {
                   type="checkbox"
                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                 />
-                <span class="ml-2 text-sm text-gray-700">设为精选文章</span>
+                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">设为精选文章</span>
               </label>
             </div>
           </div>
 
           <!-- 操作按钮 -->
-          <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+          <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
             <RouterLink
               to="/manage"
-              class="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               取消
             </RouterLink>
@@ -297,14 +297,14 @@ const savePost = async (published: boolean) => {
                 type="button"
                 @click="saveDraft"
                 :disabled="loading"
-                class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {{ loading ? '保存中...' : '保存草稿' }}
               </button>
               <button
                 type="submit"
                 :disabled="loading"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {{ loading ? '发布中...' : '发布文章' }}
               </button>

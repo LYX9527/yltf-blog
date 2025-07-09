@@ -77,36 +77,36 @@ const pageTitle = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <header class="mb-8">
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
           {{ pageTitle }}
         </h1>
-        <p v-if="!loading" class="text-gray-600">
+        <p v-if="!loading" class="text-gray-600 dark:text-gray-400">
           共找到 {{ pagination.total }} 篇文章
         </p>
       </header>
 
       <div v-if="loading" class="flex justify-center items-center h-64">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
       </div>
 
       <div v-else-if="error" class="text-center py-16">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ error }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">{{ error }}</h2>
         <button
           @click="fetchPosts"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
         >
           重试
         </button>
       </div>
 
       <div v-else-if="posts.length === 0" class="text-center py-16">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">没有找到文章</h2>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">没有找到文章</h2>
         <RouterLink
           to="/"
-          class="text-blue-600 hover:text-blue-800"
+          class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
         >
           返回首页
         </RouterLink>
@@ -117,10 +117,10 @@ const pageTitle = computed(() => {
           <article
             v-for="post in posts"
             :key="post.id"
-            class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group border border-gray-200 dark:border-gray-700"
           >
             <RouterLink :to="`/posts/${post.slug}`" class="block">
-              <div class="aspect-video bg-gray-200 overflow-hidden">
+              <div class="aspect-video bg-gray-200 dark:bg-gray-700 overflow-hidden">
                 <img
                   v-if="post.coverImage"
                   :src="getFullImageUrl(post.coverImage)"
@@ -136,7 +136,7 @@ const pageTitle = computed(() => {
               </div>
 
               <div class="p-6">
-                <div class="flex items-center text-sm text-gray-500 mb-2 space-x-4">
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2 space-x-4">
                   <span class="flex items-center">
                     <CalendarIcon class="h-4 w-4 mr-1" />
                     {{ formatDate(post.publishedAt || post.createdAt) }}
@@ -151,22 +151,22 @@ const pageTitle = computed(() => {
                   </span>
                 </div>
 
-                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
                   {{ post.title }}
                 </h3>
 
-                <p v-if="post.excerpt" class="text-gray-600 text-sm line-clamp-3 mb-4">
+                <p v-if="post.excerpt" class="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
                   {{ post.excerpt }}
                 </p>
 
                 <div class="flex items-center justify-between">
-                  <div class="flex items-center text-sm text-gray-500">
+                  <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                     <UserIcon class="h-4 w-4 mr-1" />
                     {{ post.author.name || post.author.username }}
                   </div>
 
                   <div v-if="post.category" class="flex space-x-2">
-                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-full">
                       {{ post.category.name }}
                     </span>
                   </div>
@@ -176,7 +176,7 @@ const pageTitle = computed(() => {
                   <span
                     v-for="tag in post.tags.slice(0, 3)"
                     :key="tag.tag.id"
-                    class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
+                    class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-full"
                   >
                     {{ tag.tag.name }}
                   </span>
@@ -191,7 +191,7 @@ const pageTitle = computed(() => {
             <button
               @click="changePage(pagination.page - 1)"
               :disabled="pagination.page <= 1"
-              class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               上一页
             </button>
@@ -202,10 +202,10 @@ const pageTitle = computed(() => {
                 :key="page"
                 @click="changePage(page)"
                 :class="[
-                  'px-3 py-2 text-sm font-medium rounded-md',
+                  'px-3 py-2 text-sm font-medium rounded-md transition-colors',
                   page === pagination.page
-                    ? 'text-blue-600 bg-blue-50 border border-blue-300'
-                    : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-300 dark:border-blue-600'
+                    : 'text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
                 ]"
               >
                 {{ page }}
@@ -215,7 +215,7 @@ const pageTitle = computed(() => {
             <button
               @click="changePage(pagination.page + 1)"
               :disabled="pagination.page >= pagination.totalPages"
-              class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               下一页
             </button>

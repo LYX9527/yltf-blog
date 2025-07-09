@@ -169,13 +169,13 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
 </script>
 
 <template>
-  <div class="markdown-editor border border-gray-300 rounded-lg overflow-hidden">
+  <div class="markdown-editor border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
     <!-- 工具栏 -->
-    <div class="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap items-center gap-1">
+    <div class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 p-2 flex flex-wrap items-center gap-1">
       <button
           type="button"
           @click="insertHeading(1)"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="标题 1"
       >
         H1
@@ -183,7 +183,7 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
       <button
           type="button"
           @click="insertHeading(2)"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="标题 2"
       >
         H2
@@ -191,18 +191,18 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
       <button
           type="button"
           @click="insertHeading(3)"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="标题 3"
       >
         H3
       </button>
 
-      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+      <div class="w-px h-6 bg-gray-300 dark:bg-gray-500 mx-1"></div>
 
       <button
           type="button"
           @click="insertBold"
-          class="px-2 py-1 text-sm font-bold bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm font-bold bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="粗体"
       >
         B
@@ -210,7 +210,7 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
       <button
           type="button"
           @click="insertItalic"
-          class="px-2 py-1 text-sm italic bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm italic bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="斜体"
       >
         I
@@ -218,18 +218,18 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
       <button
           type="button"
           @click="insertCode"
-          class="px-2 py-1 text-sm font-mono bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm font-mono bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="行内代码"
       >
         &lt;/&gt;
       </button>
 
-      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+      <div class="w-px h-6 bg-gray-300 dark:bg-gray-500 mx-1"></div>
 
       <button
           type="button"
           @click="insertLink"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="链接"
       >
         🔗
@@ -237,18 +237,18 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
       <button
           type="button"
           @click="insertImage"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="图片"
       >
         🖼️
       </button>
 
-      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+      <div class="w-px h-6 bg-gray-300 dark:bg-gray-500 mx-1"></div>
 
       <button
           type="button"
           @click="insertList"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="无序列表"
       >
         • List
@@ -256,7 +256,7 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
       <button
           type="button"
           @click="insertOrderedList"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="有序列表"
       >
         1. List
@@ -264,7 +264,7 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
       <button
           type="button"
           @click="insertQuote"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="引用"
       >
         " Quote
@@ -272,7 +272,7 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
       <button
           type="button"
           @click="insertCodeBlock"
-          class="px-2 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          class="px-2 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white transition-colors"
           title="代码块"
       >
         { } Code
@@ -286,8 +286,8 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
           :class="[
           'px-3 py-1 text-sm rounded transition-colors',
           showPreview
-            ? 'bg-blue-500 text-white'
-            : 'bg-white border border-gray-300 hover:bg-gray-100'
+            ? 'bg-blue-500 dark:bg-blue-600 text-white'
+            : 'bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-500 text-gray-900 dark:text-white'
         ]"
           title="预览"
       >
@@ -302,20 +302,20 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
         <textarea
             v-model="content"
             :placeholder="placeholder"
-            class="w-full h-full p-4 border-0 resize-none focus:outline-none font-mono text-sm leading-relaxed"
+            class="w-full h-full p-4 border-0 resize-none focus:outline-none font-mono text-sm leading-relaxed bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             @paste="handlePaste"
         ></textarea>
 
         <!-- 上传提示 -->
-        <div v-if="uploading" class="absolute top-2 right-2 bg-blue-500 text-white px-3 py-1 rounded text-sm">
+        <div v-if="uploading" class="absolute top-2 right-2 bg-blue-500 dark:bg-blue-600 text-white px-3 py-1 rounded text-sm">
           上传中...
         </div>
       </div>
 
       <!-- 预览 -->
-      <div v-show="showPreview" class="flex-1 overflow-auto">
+      <div v-show="showPreview" class="flex-1 overflow-auto bg-white dark:bg-gray-800">
         <div
-            class="p-4 prose prose-sm max-w-none"
+            class="p-4 prose prose-sm max-w-none dark:prose-invert"
             v-html="renderedContent"
         ></div>
       </div>
@@ -428,5 +428,46 @@ const insertQuote = () => insertText('\n> ', '', '引用文本')
 .prose th {
   background-color: #f9fafb;
   font-weight: 600;
+}
+
+/* Dark mode styles for prose */
+.dark .prose {
+  color: #d1d5db;
+}
+
+.dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4, .dark .prose h5, .dark .prose h6 {
+  color: #f9fafb;
+}
+
+.dark .prose blockquote {
+  border-left-color: #4b5563;
+  color: #9ca3af;
+}
+
+.dark .prose code {
+  background-color: #374151;
+  color: #f9fafb;
+}
+
+.dark .prose pre {
+  background-color: #1f2937;
+  color: #f9fafb;
+}
+
+.dark .prose a {
+  color: #60a5fa;
+}
+
+.dark .prose a:hover {
+  color: #3b82f6;
+}
+
+.dark .prose th, .dark .prose td {
+  border-color: #4b5563;
+}
+
+.dark .prose th {
+  background-color: #374151;
+  color: #f9fafb;
 }
 </style>
