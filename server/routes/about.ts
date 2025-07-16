@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
     });
 
     if (!about) {
-      return res.json({
+       res.json({
         name: 'Blog Author',
         title: '一个不甘心一直写业务代码的程序员！！',
         description: `作为一名程序员，我不满足于日复一日的业务逻辑编写。我渴望探索技术的深度，追求代码的艺术性，致力于创造有意义的产品。
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
         ],
         interests: [
           '开源项目贡献',
-          '技术架构设计', 
+          '技术架构设计',
           '产品思维',
           '用户体验',
           '技术写作',
@@ -56,8 +56,8 @@ router.get('/', async (req, res) => {
     // 解析JSON字符串为数组
     const response = {
       ...about,
-      skills: JSON.parse(about.skills),
-      interests: JSON.parse(about.interests)
+      skills: JSON.parse(about!.skills),
+      interests: JSON.parse(about!.interests)
     };
 
     res.json(response);
