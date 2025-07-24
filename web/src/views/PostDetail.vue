@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { CalendarIcon, ClockIcon, EyeIcon, UserIcon, TagIcon, HeartIcon } from '@heroicons/vue/24/outline'
 import { HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
@@ -30,7 +30,7 @@ const fetchPost = async () => {
     post.value = null
     isLiked.value = false
     likeCount.value = 0
-    
+
     const response = await postsApi.getBySlug(slug.value)
     post.value = response.data
 
@@ -102,7 +102,7 @@ const formatDate = (dateString: string) => {
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- 侧边目录 -->
     <TableOfContents v-if="post && post.content" :content="post.content" />
-    
+
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- 主要内容区域 -->

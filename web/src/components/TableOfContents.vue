@@ -25,31 +25,31 @@ const isAnimating = ref(false)
 // 解析Markdown内容提取标题
 const parseHeadings = (content: string): HeadingItem[] => {
   const results: HeadingItem[] = []
-  
+
   // 移除代码块中的内容，避免误识别代码注释中的 #
   const removeCodeBlocks = (text: string): string => {
     // 移除行内代码 `code`
     let cleaned = text.replace(/`[^`]*`/g, '')
-    
+
     // 移除代码块 ```code```
     cleaned = cleaned.replace(/```[\s\S]*?```/g, '')
-    
+
     // 移除缩进代码块（4个空格或1个tab开头的行）
     cleaned = cleaned.replace(/^(    |\t).*$/gm, '')
-    
+
     return cleaned
   }
-  
+
   // 清理后的内容
   const cleanedContent = removeCodeBlocks(content)
-  
+
   // 按行处理，确保标题必须在行首
   const lines = cleanedContent.split('\n')
-  
+
   for (const line of lines) {
     // 匹配行首的标题格式：# 标题
     const headingMatch = line.match(/^(#{1,6})\s+(.+)$/)
-    
+
     if (headingMatch) {
       const level = headingMatch[1].length
       const text = headingMatch[2].trim()
@@ -156,26 +156,26 @@ const visibleHeadings = computed(() => {
 // 切换展开/收缩状态
 const toggleExpand = () => {
   if (isAnimating.value) return
-  
+
   isAnimating.value = true
-  
+
   const container = tocContainer.value
   const content = tocContent.value
   if (!container) return
-  
+
   const tl = gsap.timeline({
     onComplete: () => {
       isAnimating.value = false
     }
   })
-  
+
   if (!isExpanded.value) {
     // 展开动画：先展开宽度，再显示内容
     isExpanded.value = true // 先显示内容DOM
-    
+
     // 设置内容初始状态
-    gsap.set(content, { opacity: 0, x: -20 })
-    
+    gsap.set(content!, { opacity: 0, x: -20 })
+
     tl.to(container, {
       width: "280px",
       zIndex: 50,
@@ -187,7 +187,7 @@ const toggleExpand = () => {
       duration: 0.2,
       ease: "power2.out"
     }, "<")
-    .to(content, {
+    .to(content!, {
       opacity: 1,
       x: 0,
       duration: 0.25,
@@ -195,7 +195,7 @@ const toggleExpand = () => {
     }, "-=0.1")
   } else {
     // 收缩动画：先隐藏内容，再收缩宽度
-    tl.to(content, {
+    tl.to(content!, {
       opacity: 0,
       x: -20,
       duration: 0.2,
@@ -226,14 +226,14 @@ onMounted(() => {
   setTimeout(() => {
     // 设置初始状态 - 收缩状态
     if (tocContainer.value) {
-      gsap.set(tocContainer.value, { 
+      gsap.set(tocContainer.value, {
         width: "48px",
         zIndex: 10,
         boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
       })
     }
     // 不需要设置tocContent的初始状态，因为v-show会处理显示隐藏
-    
+
     updateHeadingOffsets()
     handleScroll()
   }, 100)
@@ -259,7 +259,7 @@ onUnmounted(() => {
     style="height: calc(100vh - 12rem); top: 6rem; left: 0;"
   >
     <!-- 收缩状态的侧边按钮 -->
-    <div 
+    <div
       v-show="!isExpanded"
       class="h-full flex flex-col items-center justify-start pt-4"
     >
@@ -270,10 +270,10 @@ onUnmounted(() => {
         class="p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50 group"
         title="展开目录"
       >
-        <svg 
+        <svg
           class="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200"
-          fill="none" 
-          stroke="currentColor" 
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
@@ -290,7 +290,7 @@ onUnmounted(() => {
     </div>
 
     <!-- 展开状态的完整内容 -->
-    <div 
+    <div
       ref="tocContent"
       v-show="isExpanded"
       class="absolute inset-0 flex flex-col h-full"
@@ -304,7 +304,7 @@ onUnmounted(() => {
             </svg>
             目录
           </h3>
-          
+
           <!-- 收缩按钮 -->
           <button
             @click="toggleExpand"
@@ -312,10 +312,10 @@ onUnmounted(() => {
             class="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50"
             title="收缩目录"
           >
-            <svg 
+            <svg
               class="w-4 h-4 text-gray-600 dark:text-gray-400"
-              fill="none" 
-              stroke="currentColor" 
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
