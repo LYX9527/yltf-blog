@@ -20,26 +20,8 @@ const error = ref('')
 const isLiked = ref(false)
 const likeCount = ref(0)
 const likePending = ref(false)
-const tocPosition = ref({
-  left: '390px',
-  top: '6rem',
-})
 
 const slug = computed(() => route.params.slug as string)
-
-// 计算目录位置
-const calculateTocPosition = () => {
-  const container = document.querySelector('.max-w-7xl')
-  if (container) {
-    const containerRect = container.getBoundingClientRect()
-    const containerLeft = containerRect.left
-    const tocLeft = Math.max(16, containerLeft - 250) // 288px = 18rem, 16px = 1rem 最小距离
-    tocPosition.value = {
-      left: `${tocLeft}px`,
-      top: '6rem',
-    }
-  }
-}
 
 const fetchPost = async () => {
   try {
@@ -78,24 +60,10 @@ watch(
   async (newSlug) => {
     if (newSlug) {
       await fetchPost()
-      // 重新计算目录位置
-      setTimeout(() => {
-        calculateTocPosition()
-      }, 100)
     }
   },
   { immediate: true }
 )
-
-onMounted(() => {
-  // 监听窗口大小变化
-  window.addEventListener('resize', calculateTocPosition)
-})
-
-// 清理事件监听
-onUnmounted(() => {
-  window.removeEventListener('resize', calculateTocPosition)
-})
 
 const handleLike = async () => {
   if (!authStore.isLoggedIn) {
@@ -128,21 +96,17 @@ const formatDate = (dateString: string) => {
     day: 'numeric'
   })
 }
-
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- 侧边目录 -->
+    <TableOfContents v-if="post && post.content" :content="post.content" />
+    
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- 主要内容区域 -->
-        <div class="lg:col-span-2 relative">
-          <!-- 目录 - 固定定位在左侧，动态计算位置 -->
-          <div v-if="post && post.content" class="hidden xl:block fixed z-10 w-64"
-               :style="{ left: tocPosition.left, top: tocPosition.top }">
-            <TableOfContents :content="post.content" />
-          </div>
-
+        <div class="lg:col-span-2">
           <div v-if="loading" class="flex justify-center items-center h-64">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
           </div>

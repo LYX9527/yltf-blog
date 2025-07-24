@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { gsap } from 'gsap'
 
 interface HeadingItem {
   id: string
@@ -17,6 +18,9 @@ const props = defineProps<Props>()
 const headings = ref<HeadingItem[]>([])
 const activeHeading = ref<string>('')
 const tocContainer = ref<HTMLElement>()
+const tocContent = ref<HTMLElement>()
+const isExpanded = ref(false)
+const isAnimating = ref(false)
 
 // 解析Markdown内容提取标题
 const parseHeadings = (content: string): HeadingItem[] => {
@@ -77,7 +81,7 @@ const generateId = (text: string): string => {
 // 计算缩进样式
 const getIndentStyle = (level: number) => {
   return {
-    paddingLeft: `${(level - 1)}rem`
+    paddingLeft: `${(level - 1) * 0.75}rem`
   }
 }
 
@@ -102,6 +106,11 @@ const scrollToHeading = (id: string) => {
       top: elementTop,
       behavior: 'smooth'
     })
+
+    // 在小屏幕上，点击标题后自动收缩目录
+    if (window.innerWidth < 1280) {
+      toggleExpand()
+    }
   }
 }
 
@@ -144,15 +153,90 @@ const visibleHeadings = computed(() => {
   return headings.value.filter(h => h.level <= 4) // 只显示1-4级标题
 })
 
+// 切换展开/收缩状态
+const toggleExpand = () => {
+  if (isAnimating.value) return
+  
+  isAnimating.value = true
+  
+  const container = tocContainer.value
+  const content = tocContent.value
+  if (!container) return
+  
+  const tl = gsap.timeline({
+    onComplete: () => {
+      isAnimating.value = false
+    }
+  })
+  
+  if (!isExpanded.value) {
+    // 展开动画：先展开宽度，再显示内容
+    isExpanded.value = true // 先显示内容DOM
+    
+    // 设置内容初始状态
+    gsap.set(content, { opacity: 0, x: -20 })
+    
+    tl.to(container, {
+      width: "280px",
+      zIndex: 50,
+      duration: 0.3,
+      ease: "power2.out"
+    })
+    .to(container, {
+      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      duration: 0.2,
+      ease: "power2.out"
+    }, "<")
+    .to(content, {
+      opacity: 1,
+      x: 0,
+      duration: 0.25,
+      ease: "power2.out"
+    }, "-=0.1")
+  } else {
+    // 收缩动画：先隐藏内容，再收缩宽度
+    tl.to(content, {
+      opacity: 0,
+      x: -20,
+      duration: 0.2,
+      ease: "power2.in"
+    })
+    .to(container, {
+      width: "48px",
+      duration: 0.3,
+      ease: "power2.inOut"
+    }, "+=0.1")
+    .to(container, {
+      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      zIndex: 10,
+      duration: 0.2,
+      ease: "power2.out"
+    }, "<")
+    .call(() => {
+      isExpanded.value = false // 动画完成后隐藏内容DOM
+    })
+  }
+}
+
 onMounted(() => {
   // 解析标题
   headings.value = parseHeadings(props.content)
 
-  // 等待DOM渲染完成后更新偏移量
+  // 等待DOM渲染完成后设置初始状态和偏移量
   setTimeout(() => {
+    // 设置初始状态 - 收缩状态
+    if (tocContainer.value) {
+      gsap.set(tocContainer.value, { 
+        width: "48px",
+        zIndex: 10,
+        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+      })
+    }
+    // 不需要设置tocContent的初始状态，因为v-show会处理显示隐藏
+    
     updateHeadingOffsets()
     handleScroll()
-  }, 500)
+  }, 100)
 
   // 监听滚动事件
   window.addEventListener('scroll', handleScroll, { passive: true })
@@ -170,40 +254,101 @@ onUnmounted(() => {
 <template>
   <div
     ref="tocContainer"
-    class="table-of-contents bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-h-[calc(100vh-8rem)] flex flex-col"
+    class="table-of-contents fixed bg-white dark:bg-gray-800 rounded-r-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200"
+    :class="{ 'hover:shadow-xl': !isExpanded }"
+    style="height: calc(100vh - 12rem); top: 6rem; left: 0;"
   >
-    <!-- 固定标题部分 -->
-    <div class="flex-shrink-0 p-4 border-b border-gray-200 dark:border-gray-700">
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- 收缩状态的侧边按钮 -->
+    <div 
+      v-show="!isExpanded"
+      class="h-full flex flex-col items-center justify-start pt-4"
+    >
+      <!-- 目录按钮 -->
+      <button
+        @click="toggleExpand"
+        :disabled="isAnimating"
+        class="p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50 group"
+        title="展开目录"
+      >
+        <svg 
+          class="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200"
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
         </svg>
+      </button>
+
+      <!-- 垂直的"目录"文字 -->
+      <div class="mt-4 writing-mode-vertical text-sm text-gray-500 dark:text-gray-400 font-medium tracking-wider">
         目录
-      </h3>
+      </div>
+
+      <!-- 当前激活标题的指示器 -->
+      <div v-if="activeHeading" class="mt-4 w-1 h-8 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
     </div>
 
-    <!-- 可滚动的内容部分 -->
-    <div class="flex-1 overflow-y-auto p-4">
-      <nav v-if="visibleHeadings.length > 0" class="space-y-1">
-        <a
-          v-for="heading in visibleHeadings"
-          :key="heading.id"
-          :href="`#${heading.id}`"
-          :style="getIndentStyle(heading.level)"
-          :class="[
-            'block py-2 px-3 text-sm rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700',
-            activeHeading === heading.id
-              ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-l-2 border-blue-500 dark:border-blue-400'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-          ]"
-          @click.prevent="scrollToHeading(heading.id)"
-        >
-          <span class="line-clamp-2">{{ heading.text }}</span>
-        </a>
-      </nav>
+    <!-- 展开状态的完整内容 -->
+    <div 
+      ref="tocContent"
+      v-show="isExpanded"
+      class="absolute inset-0 flex flex-col h-full"
+    >
+      <!-- 标题栏 -->
+      <div class="flex-shrink-0 p-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+            </svg>
+            目录
+          </h3>
+          
+          <!-- 收缩按钮 -->
+          <button
+            @click="toggleExpand"
+            :disabled="isAnimating"
+            class="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50"
+            title="收缩目录"
+          >
+            <svg 
+              class="w-4 h-4 text-gray-600 dark:text-gray-400"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
 
-      <div v-else class="text-center py-8">
-        <p class="text-gray-500 dark:text-gray-400 text-sm">暂无标题</p>
+      <!-- 可滚动的内容部分 -->
+      <div class="flex-1 overflow-y-auto">
+        <div class="p-4">
+          <nav v-if="visibleHeadings.length > 0" class="space-y-1">
+            <a
+              v-for="heading in visibleHeadings"
+              :key="heading.id"
+              :href="`#${heading.id}`"
+              :style="getIndentStyle(heading.level)"
+              :class="[
+                'block py-2 px-3 text-sm rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:translate-x-1',
+                activeHeading === heading.id
+                  ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-l-2 border-blue-500 dark:border-blue-400 translate-x-1'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+              ]"
+              @click.prevent="scrollToHeading(heading.id)"
+            >
+              <span class="line-clamp-2">{{ heading.text }}</span>
+            </a>
+          </nav>
+
+          <div v-else class="text-center py-8">
+            <p class="text-gray-500 dark:text-gray-400 text-sm">暂无标题</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -211,8 +356,12 @@ onUnmounted(() => {
 
 <style scoped>
 .table-of-contents {
-  max-width: 250px;
-  min-width: 200px;
+  min-height: 200px;
+}
+
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
 
 .line-clamp-2 {
@@ -248,5 +397,18 @@ onUnmounted(() => {
 
 .dark .table-of-contents .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
+}
+
+/* 添加链接的微动画 */
+.table-of-contents a {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.table-of-contents a:hover {
+  transform: translateX(4px);
+}
+
+.table-of-contents a.active {
+  transform: translateX(4px);
 }
 </style>

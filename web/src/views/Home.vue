@@ -22,7 +22,7 @@ let scrollTriggers: ScrollTrigger[] = []
 // 打字机文本
 const typewriterTexts = [
   "技术分享",
-  "学习笔记", 
+  "学习笔记",
   "开发经验",
   "代码艺术"
 ]
@@ -144,7 +144,7 @@ const startTypewriterEffect = () => {
 
   const typeText = () => {
     const text = typewriterTexts[currentTextIndex]
-    
+
     // 打字效果
     gsap.to(typewriterElement, {
       duration: text.length * 0.1,
@@ -179,7 +179,7 @@ const setupScrollAnimations = () => {
     scrub: 1,
     onUpdate: (self) => {
       const progress = self.progress
-      
+
       // 内容向上移动并缩放
       gsap.to('.hero-content', {
         y: -progress * 150,
@@ -327,7 +327,7 @@ const formatDate = (dateString: string) => {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </RouterLink>
-            
+
                          <div class="text-sm text-gray-600 dark:text-white/60">
                或者向下滚动探索更多内容
              </div>
@@ -529,7 +529,7 @@ const formatDate = (dateString: string) => {
 .gradient-mesh {
   position: absolute;
   inset: 0;
-  background: 
+  background:
     radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 40% 60%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
@@ -538,7 +538,7 @@ const formatDate = (dateString: string) => {
 
 /* Dark mode gradient mesh */
 .dark .gradient-mesh {
-  background: 
+  background:
     radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
     radial-gradient(circle at 40% 60%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
@@ -553,7 +553,7 @@ const formatDate = (dateString: string) => {
 .grain-overlay {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px);
   background-size: 50px 50px;
   opacity: 0.03;
@@ -562,7 +562,7 @@ const formatDate = (dateString: string) => {
 
 /* Dark mode grain overlay */
 .dark .grain-overlay {
-  background-image: 
+  background-image:
     radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
 }
 
@@ -655,19 +655,19 @@ const formatDate = (dateString: string) => {
   .hero-section {
     min-height: 100vh;
   }
-  
+
   .geometric-decorations {
     display: none;
   }
-  
+
   .floating-dots .floating-dot:nth-child(n+3) {
     display: none;
   }
-  
+
   .hero-title {
     font-size: 3rem;
   }
-  
+
   .hero-title span:last-child {
     font-size: 2rem;
   }
