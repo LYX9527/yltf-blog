@@ -254,7 +254,7 @@ onUnmounted(() => {
 <template>
   <div
     ref="tocContainer"
-    class="table-of-contents fixed bg-white dark:bg-gray-800 rounded-r-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200"
+    class="table-of-contents fixed bg-white dark:bg-gray-800 rounded-r-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200 hidden lg:block"
     :class="{ 'hover:shadow-xl': !isExpanded }"
     style="height: calc(100vh - 12rem); top: 6rem; left: 0;"
   >
