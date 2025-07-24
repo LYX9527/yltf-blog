@@ -17,6 +17,7 @@
     "@vueuse/core": "^13.5.0",
     "axios": "^1.10.0",
     "date-fns": "^4.1.0",
+    "gsap": "^3.13.0",
     "highlight.js": "^11.11.1",
     "marked": "^16.0.0",
     "pinia": "^3.0.3",

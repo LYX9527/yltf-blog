@@ -30,3 +30,4 @@ dist.zip
 .claude/
 **/uploads/*
 **/*.db
+server/prisma/dev.db
